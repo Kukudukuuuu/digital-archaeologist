@@ -17,7 +17,7 @@ export function Timeline({
     <section aria-label="Archive timeline" className="border border-line">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line px-5 py-6 md:px-8">
         <div>
-          <p className="catalog text-[11px] text-dim">Strata — drag through time</p>
+          <p className="catalog text-[11px] text-dim">01 — Strata · drag through time</p>
           <p
             aria-live="polite"
             className="mt-2 font-display text-5xl font-light text-bone md:text-6xl"

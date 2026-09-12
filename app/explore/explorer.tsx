@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AiArchaeologist } from "@/components/ai-archaeologist/ai-archaeologist";
 import { ArchiveViewer } from "@/components/archive-viewer/archive-viewer";
+import { Comparison } from "@/components/comparison/comparison";
+import { Evolution } from "@/components/evolution/evolution";
 import { Timeline } from "@/components/timeline/timeline";
 import { ArchiveState, type ArchiveStateKind } from "@/components/ui/archive-state";
 import { validateUrl, type Snapshot } from "@/lib/archive/wayback";
@@ -115,6 +118,15 @@ function ExplorerView({ rawUrl, onRetry }: { rawUrl: string; onRetry: () => void
 
       <div className="mt-6">
         <Timeline snapshots={snapshots} selected={selected} onSelect={setSelected} />
+      </div>
+
+      <div className="mt-6">
+        <Comparison snapshots={snapshots} />
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Evolution snapshots={snapshots} />
+        <AiArchaeologist />
       </div>
     </div>
   );
