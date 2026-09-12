@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "next";
+import { useState } from "react";
 import { validateUrl } from "@/lib/archive/wayback";
 
 export function UrlForm() {
