@@ -1,69 +1,99 @@
-import Image from "next/image";
+import Link from "next/link";
+import { UrlForm } from "@/components/hero/url-form";
+import { SITE } from "@/lib/site";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div>
+      {/* HERO */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-6xl px-5 pb-16 pt-16 md:px-8 md:pb-24 md:pt-24">
+          <p className="catalog text-[11px] text-ochre">
+            Field notes on the history of the web — N° 001
           </p>
+          <h1 className="mt-6 max-w-4xl font-display text-5xl font-light leading-[1.02] tracking-tight text-bone md:text-8xl">
+            Explore the
+            <br />
+            history of the web.
+          </h1>
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-faded md:text-lg">
+            Travel through archived versions of websites and discover how the
+            internet changed over time.
+          </p>
+          <div className="mt-10 max-w-2xl">
+            <UrlForm />
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+            <span className="catalog text-[11px] text-dim">Try:</span>
+            {SITE.presets.map((preset) => (
+              <Link
+                key={preset}
+                href={`/explore?url=${encodeURIComponent(preset)}`}
+                className="pressable font-catalog text-xs tracking-wide text-faded underline decoration-line-strong underline-offset-4 hover:text-ochre"
+              >
+                {preset}
+              </Link>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="border-b border-line">
+        <div className="mx-auto grid max-w-6xl gap-px px-5 py-14 md:grid-cols-3 md:px-8">
+          {[
+            {
+              n: "01",
+              title: "Enter a website",
+              body: "Any address you remember — or never knew. We look it up in the Internet Archive's Wayback Machine.",
+            },
+            {
+              n: "02",
+              title: "Scrub the timeline",
+              body: "Every marker is a real archived capture. Drag through the years and watch the page change.",
+            },
+            {
+              n: "03",
+              title: "Compare eras",
+              body: "Put two moments side by side and see exactly what survived — and what didn't.",
+            },
+          ].map((step) => (
+            <article key={step.n} className="border-t border-line-strong pt-5 md:mr-8">
+              <p className="catalog text-[11px] text-ochre">{step.n}</p>
+              <h2 className="mt-3 font-display text-2xl font-light text-bone">
+                {step.title}
+              </h2>
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-faded">
+                {step.body}
+              </p>
+            </article>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-5 py-14 md:px-8 md:py-20">
+          <p className="catalog text-[11px] text-dim">About this excavation</p>
+          <div className="mt-6 grid gap-10 md:grid-cols-2">
+            <p className="font-display text-2xl font-light leading-snug text-bone md:text-3xl">
+              The web forgets itself daily. Pages are redesigned, deleted, and
+              overwritten — Digital Archaeologist digs up what the archive kept.
+            </p>
+            <div className="space-y-4 text-sm leading-relaxed text-faded">
+              <p>
+                Every snapshot shown here is a genuine capture from the Internet
+                Archive, rendered exactly as it was preserved. Nothing is
+                reconstructed, upscaled, or imagined.
+              </p>
+              <p>
+                When a year is missing, it means no capture exists — the record
+                is honest about its own gaps.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
