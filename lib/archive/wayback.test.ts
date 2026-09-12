@@ -3,6 +3,7 @@ import {
   ArchiveError,
   buildIframeUrl,
   buildSnapshotUrl,
+  collapseToYearly,
   deriveEras,
   normalizeUrl,
   parseCdxResponse,
@@ -89,6 +90,16 @@ describe("snapshot URLs", () => {
     expect(buildIframeUrl(snap)).toBe(
       "https://web.archive.org/web/20100101000000id_/http://www.youtube.com/"
     );
+  });
+});
+
+describe("collapseToYearly", () => {
+  it("keeps the first capture per year, sorted oldest-first", () => {
+    const snaps = parseCdxResponse(CDX_FIXTURE);
+    const withDupes = [...snaps, ...snaps].reverse();
+    const yearly = collapseToYearly(withDupes);
+    expect(yearly.map((s) => s.year)).toEqual([2005, 2010]);
+    expect(yearly[0].timestamp).toBe("20050428014715");
   });
 });
 

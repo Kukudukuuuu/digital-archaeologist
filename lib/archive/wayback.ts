@@ -120,6 +120,24 @@ export function buildIframeUrl(s: Snapshot): string {
 }
 
 /**
+ * Reduce snapshots to one representative (first capture) per year,
+ * sorted oldest-first. Used to merge windowed + tail CDX results.
+ */
+export function collapseToYearly(snaps: Snapshot[]): Snapshot[] {
+  const seen = new Set<number>();
+  const out: Snapshot[] = [];
+  const sorted = [...snaps].sort((a, b) =>
+    a.timestamp < b.timestamp ? -1 : 1
+  );
+  for (const s of sorted) {
+    if (seen.has(s.year)) continue;
+    seen.add(s.year);
+    out.push(s);
+  }
+  return out;
+}
+
+/**
  * Group snapshots into one era per year. Labels describe only what the
  * data shows (position in history, capture counts) — never invented events.
  */
