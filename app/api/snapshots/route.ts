@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
   ];
   const fetchWindow = ([from, to]: [string, string]) =>
     fetchJson(cdxUrl(target, `&from=${from}&to=${to}&collapse=timestamp:4&limit=1000`));
-  let windowResults = await Promise.all(WINDOWS.map(fetchWindow));
+  const windowResults = await Promise.all(WINDOWS.map(fetchWindow));
   if (windowResults.some((r) => r === "RATE_LIMITED")) {
     return NextResponse.json(
       errorBody("RATE_LIMITED", "The archive is rate-limiting requests. Try again in a moment."),
