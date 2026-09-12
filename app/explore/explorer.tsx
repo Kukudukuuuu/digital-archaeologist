@@ -6,8 +6,7 @@ import { ArchiveViewer } from "@/components/archive-viewer/archive-viewer";
 import { ArchiveState, type ArchiveStateKind } from "@/components/ui/archive-state";
 import { validateUrl, type Snapshot } from "@/lib/archive/wayback";
 
-type Status =
-  | { phase: "missing" }
+type ViewStatus =
   | { phase: "loading" }
   | { phase: "error"; kind: Exclude<ArchiveStateKind, "loading"> }
   | { phase: "ready"; snapshots: Snapshot[]; partial: boolean };
@@ -19,24 +18,12 @@ const CODE_TO_KIND: Record<string, Exclude<ArchiveStateKind, "loading">> = {
   UPSTREAM_ERROR: "upstream",
 };
 
-export function Explorer() {
-  const params = useSearchParams();
-  const rawUrl = (params.get("url") ?? "").trim();
-  const [status, setStatus] = useState<Status>({ phase: "missing" });
+function ExplorerView({ rawUrl, onRetry }: { rawUrl: string; onRetry: () => void }) {
+  const [status, setStatus] = useState<ViewStatus>({ phase: "loading" });
   const [selected, setSelected] = useState(0);
-  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (!rawUrl) {
-      setStatus({ phase: "missing" });
-      return;
-    }
-    if (!validateUrl(rawUrl).ok) {
-      setStatus({ phase: "error", kind: "invalid" });
-      return;
-    }
     let cancelled = false;
-    setStatus({ phase: "loading" });
     fetch(`/api/snapshots?url=${encodeURIComponent(rawUrl)}`)
       .then(async (res) => {
         const data = (await res.json()) as {
@@ -65,15 +52,8 @@ export function Explorer() {
     return () => {
       cancelled = true;
     };
-  }, [rawUrl, attempt]);
+  }, [rawUrl]);
 
-  if (status.phase === "missing") {
-    return (
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8">
-        <ArchiveState kind="invalid" />
-      </div>
-    );
-  }
   if (status.phase === "loading") {
     return (
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8">
@@ -84,19 +64,17 @@ export function Explorer() {
       </div>
     );
   }
+
   if (status.phase === "error") {
     return (
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8">
-        {status.kind === "invalid" && (
-          <p className="catalog mb-6 text-[11px] text-dim">Excavating {rawUrl}</p>
-        )}
         <ArchiveState
           kind={status.kind}
           action={
             status.kind === "rate-limited" || status.kind === "upstream" ? (
               <button
                 type="button"
-                onClick={() => setAttempt((a) => a + 1)}
+                onClick={onRetry}
                 className="pressable catalog border border-line-strong px-6 py-3 text-xs text-bone hover:border-ochre hover:text-ochre"
               >
                 Try again
@@ -163,5 +141,30 @@ export function Explorer() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function Explorer() {
+  const params = useSearchParams();
+  const rawUrl = (params.get("url") ?? "").trim();
+  const [attempt, setAttempt] = useState(0);
+
+  if (!rawUrl || !validateUrl(rawUrl).ok) {
+    return (
+      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8">
+        {rawUrl ? (
+          <p className="catalog mb-6 text-[11px] text-dim">Excavating {rawUrl}</p>
+        ) : null}
+        <ArchiveState kind="invalid" />
+      </div>
+    );
+  }
+
+  return (
+    <ExplorerView
+      key={`${rawUrl}-${attempt}`}
+      rawUrl={rawUrl}
+      onRetry={() => setAttempt((a) => a + 1)}
+    />
   );
 }

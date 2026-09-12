@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   buildIframeUrl,
   buildSnapshotUrl,
@@ -8,15 +8,12 @@ import {
 } from "@/lib/archive/wayback";
 
 export function ArchiveViewer({ snapshot }: { snapshot: Snapshot }) {
+  // Note: the parent remounts this component (key = snapshot timestamp),
+  // so `settled` always starts false for a new snapshot — no reset effect.
   const [frameKey, setFrameKey] = useState(0);
   const [settled, setSettled] = useState(false);
   const iframeUrl = buildIframeUrl(snapshot);
   const replayUrl = buildSnapshotUrl(snapshot);
-
-  // Re-run the enter transition whenever the snapshot changes.
-  useEffect(() => {
-    setSettled(false);
-  }, [snapshot.timestamp]);
 
   return (
     <figure className="border border-line-strong">
