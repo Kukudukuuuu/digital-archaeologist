@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArchiveViewer } from "@/components/archive-viewer/archive-viewer";
+import { Timeline } from "@/components/timeline/timeline";
 import { ArchiveState, type ArchiveStateKind } from "@/components/ui/archive-state";
 import { validateUrl, type Snapshot } from "@/lib/archive/wayback";
 
@@ -112,33 +113,8 @@ function ExplorerView({ rawUrl, onRetry }: { rawUrl: string; onRetry: () => void
         <ArchiveViewer key={current.timestamp} snapshot={current} />
       </div>
 
-      {/* Timeline (Task 7) and comparison/evolution/AI (Task 8) mount here. */}
-      <div className="mt-10 border border-dashed border-line p-6">
-        <p className="catalog text-[11px] text-dim">
-          Timeline · comparison · evolution — arriving next. Currently viewing the
-          most recent capture ({current.displayDate}).
-          <span className="sr-only">
-            Snapshot {selected + 1} of {snapshots.length}.
-          </span>
-        </p>
-        <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            disabled={selected <= 0}
-            onClick={() => setSelected((i) => Math.max(0, i - 1))}
-            className="pressable catalog border border-line-strong px-4 py-2 text-[11px] text-bone hover:border-ochre disabled:opacity-30"
-          >
-            ← Older
-          </button>
-          <button
-            type="button"
-            disabled={selected >= snapshots.length - 1}
-            onClick={() => setSelected((i) => Math.min(snapshots.length - 1, i + 1))}
-            className="pressable catalog border border-line-strong px-4 py-2 text-[11px] text-bone hover:border-ochre disabled:opacity-30"
-          >
-            Newer →
-          </button>
-        </div>
+      <div className="mt-6">
+        <Timeline snapshots={snapshots} selected={selected} onSelect={setSelected} />
       </div>
     </div>
   );
